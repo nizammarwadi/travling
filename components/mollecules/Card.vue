@@ -1,98 +1,74 @@
 <template>
-<section class="rating">
-    <div class="rating-user">
-        <div class="rating-user-image">
-            <img src="~/assets/images/boy.png" class="rounded-circle" width="60px" alt="not-found">
-        </div>
-        <div class="rating-user-main">
-            <div class="rating-user-main__name">nizammarwadi94@gmail.com</div>
-            <span class="rating-user-main__date">02 december 2018</span>
-            <div class="rating-main-star">
-                <img src="~/assets/images/staryellow.png" alt="">
-                <img src="~/assets/images/staryellow.png" alt="">
-                <img src="~/assets/images/staryellow.png" alt="">
-                <img src="~/assets/images/staryellow.png" alt="">
-                <img src="~/assets/images/star.png" alt="">
+    <section class="rating">
+        <div v-for="(item, index) in dataUser" :key="index" class="rating-user">
+            <div style="display:flex">
+                <div v-if="item.image.length > 0" class="rating-user-image">
+                    <img  :src="item.image" class="rounded-circle" width="60px" alt="not-found">
+                </div>
+                <div class="rating-user-main">
+                    <div class="rating-user-main__name">{{item.name}}</div>
+                    <span  id="date" class="rating-user-main__date">{{item.created_at}}</span>
+                    <div style="display:flex">
+                        <div v-for="(star,id) in starNumber" :key="id" class="rating-main-star" >
+                            <img v-if="id+1 <= item.review_star" src="~/assets/images/staryellow.png" alt="not found">
+                            <img v-else src="~/assets/images/star.png" alt="">
+                        </div>
+                    </div>
+                    <div class="rating-user-main__content">{{item.review_comment}}</div>
+                    <div class="rating-user-main__list">
+                        <div class="rating-user-main__list__image">
+                            <img :src="item.image" alt="">
+                        </div>
+                    </div>
+                </div>
             </div>
-            <div class="rating-user-main__content">bagus ni broh barangnya, mantaplah</div>
-            <div class="rating-user-main__list">
-                <div class="rating-user-main__list__image">
-                    <img src="~/assets/images/honey.jpg" alt="not-pound">
-                    <img src="~/assets/images/honey2.jpg" alt="not-pound">
-                    <img src="~/assets/images/honey3.jpg" alt="not-pound">  
+            <div class="dropdown">
+                <span class="droplist"><i class="fas fa-ellipsis-h"></i></span>
+                <div class="dropdown-content">
+                    <a>Edit</a>
+                    <a >Delete</a>
                 </div>
             </div>
         </div>
-    </div>
-     <div class="rating-user">
-        <div class="rating-user-image">
-            <img src="~/assets/images/boy.png" class="rounded-circle" width="60px" alt="not-found">
-        </div>
-        <div class="rating-user-main">
-            <div class="rating-user-main__name">nizammarwadi94@gmail.com</div>
-            <span class="rating-user-main__date">02 december 2018</span>
-            <div class="rating-main-star">
-                <img src="~/assets/images/staryellow.png" alt="">
-                <img src="~/assets/images/staryellow.png" alt="">
-                <img src="~/assets/images/staryellow.png" alt="">
-                <img src="~/assets/images/staryellow.png" alt="">
-                <img src="~/assets/images/star.png" alt="">
-            </div>
-            <div class="rating-user-main__content">bagus ni broh barangnya, mantaplah</div>
-            <div class="rating-user-main__list">
-                <div class="rating-user-main__list__image">
-                    <img src="~/assets/images/honey3.jpg" alt="not-pound">
-                    <img src="~/assets/images/honey.jpg" alt="not-pound">
-                    <img src="~/assets/images/honey2.jpg" alt="not-pound">  
-                </div>
-            </div>
-        </div>
-    </div>
-</section>
-    <!-- <section class="ulasam">       
-            <div class="image">
-                <img src="~/assets/images/staryellow.png" class="image rounded-circle" alt="not-found">
-            </div>
-            <div class="content">
-                <h5 class="title">Afdha</h5>
-                <p>2 Desember 2018</p>
-                <img src="~/assets/images/staryellow.png" alt="">
-                <img src="~/assets/images/staryellow.png" alt="">
-                <img src="~/assets/images/staryellow.png" alt="">
-                <img src="~/assets/images/staryellow.png" alt="">
-                <img src="~/assets/images/staryellow.png" alt="">
-                <p class="text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-                <a href="#" class="btn btn-primary">Go somewhere</a>
-            </div>
-    </section> -->
-        <!-- <div class="image" style="width: 18rem;">
-            <img src="~assets/images/star.png" class="card-img-top" alt="not-found">
-        </div>
-        <div class="card-content">
-            <h5 class="card-title">Card title</h5>
-            <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-            <a href="#" class="btn btn-primary">Go somewhere</a>
-        </div> -->
+    </section>
 </template>
-
 <script>
+import axios from 'axios'
+import moment from 'moment'
 export default {
-
+     data() {
+       return {
+           dataUser: [],
+           starNumber: 5,
+       }
+   },
+   mounted() {
+       this.getDataUser()
+   },
+   methods: {
+       getDataUser() {
+           axios.get('https://review-backend.herokuapp.com/api/v1/review')
+           .then(res => {
+               this.dataUser = res.data.data
+               console.log(this.dataUser);
+           })
+           .catch(err => {
+               console.log(err);
+           })
+       }
+   }
 }
 </script>
 
 <style>
     .rating {
         padding: 0px 20%;
-        margin-top: -20px;
     }
     .rating-user {
         margin-top: 20px;
         display: flex;
+        justify-content: space-between;
         padding: 20px 12px 40px;
-        /* width: 672px;
-        margin: 0px auto;
-        padding: 0px 12px; */
         background-color: #F5F1F1;
     }
     .rating-user-image {
@@ -113,6 +89,42 @@ export default {
     .rating-user-main__content {
         font-size: 15px;
     }
+    .droplist {
+        opacity: 0.5;
+        margin-left: 105px;
+        color: black;
+        font-size: 16px;
+        cursor: pointer;
+    }
+    .dropdown {
+        position: relative;
+        display: inline-block;
+        text-align: left;
+    }
+    .dropdown-content {
+        border-radius: 20px 0px 20px 20px;
+        display: none;
+        position: absolute;
+        background-color: #C4C4C4;
+        width: 115px;
+    }
+    .dropdown-content a {
+        color: black;
+        font-weight: 700;
+        padding: 2px 14px;
+        text-decoration: none;
+        display: block;
+        cursor: pointer;
+    }
+    .dropdown-content a:hover {
+        background-color: #f1f1f1
+    }
+    .dropdown:hover .dropdown-content {
+        display: block;
+    }
+    /* .dropdown:hover .droplist {
+        background-color: #9facb3a5;
+    } */
     @media(max-width: 678px) {
         .rating {
             padding: 0px 20px;
@@ -129,6 +141,14 @@ export default {
         .rating-user-image img {
             width: 40px;
         }
-
     }
+    @media(max-width: 400px) {
+         .dropdown-content  {
+             width: 80px;
+        }
+        .droplist {
+            margin-left: 60px;
+        }
+    }
+  
 </style>

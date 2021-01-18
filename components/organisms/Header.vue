@@ -2,40 +2,62 @@
     <div class="header">
         <div class="review">
             <p>Review</p>
-            <div class="star">
-                <img src="~/assets/images/staryellow.png" alt="not found">
-                <img src="~/assets/images/staryellow.png" alt="not found">
-                <img src="~/assets/images/staryellow.png" alt="not found">
-                <img src="~/assets/images/staryellow.png" alt="not found">
-                <img src="~/assets/images/star.png" alt="not found">
-                <!-- <span><i class="fas fa-star"></i></span>
-                <span><i class="fas fa-star"></i></span>
-                <span><i class="fas fa-star"></i></span>
-                <span><i class="fas fa-star"></i></span>
-                <span><i class="fas fa-star"></i></span> -->
+            <div style="display:flex">
+                <div v-for="(star,id) in starNumber" :key="id" class="star" id="star">
+                    <img v-if="id+1 <= chooseRating" @click="chooseRating = id+1" src="~/assets/images/staryellow.png" alt="not found">
+                    <img v-else @click="chooseRating = id+1" src="~/assets/images/star.png" alt="">
+                </div>
             </div>
         </div>
         <form>
             <div class="mb-3">
-                <label for="exampleInputEmail1" class="form-label"></label>
-                <input type="email" class="form-control name" id="exampleInputEmail1" placeholder="Tulis Nama Kamu" >
-                <!-- <div id="emailHelp" class="form-text">We'll never share your email with anyone else.</div> -->
+                <label for="name" class="form-label"></label>
+                <input v-model="name" type="email" class="form-control name" id="exampleInputEmail1" placeholder="Tulis Nama Kamu">
             </div>
             <div class="form-floating">
-                <textarea class="form-control comment" placeholder="Tulis Review Terbaik mu" id="floatingTextarea2" style="height: 80px"></textarea>
-                <!-- <label for="floatingTextarea2">Comments</label> -->
+                <textarea v-model="comment" class="form-control comment" placeholder="Tulis Review Terbaik mu" id="floatingTextarea2" style="height: 80px"></textarea>
             </div>
         </form>
         <div class="button">
-            <button type="submit" class="upload">Upload gambar</button>
-            <button type="submit" class="send">Kirim</button>
+            <label class="device">
+                <span>Upload Gambar</span>
+                <input type="file" class="upload">
+            </label>
+            <button type="submit" class="send" @click.prevent="submitData">Kirim</button>
         </div>
     </div>
 </template>
 
 <script>
+import axios from 'axios'
 export default {
-
+    data() {
+        return {
+            starNumber: 5,
+            chooseRating: 0,
+            star: '',
+            name: '',
+            comment: '',
+        }
+    },
+    methods: {
+        submitData() {
+            let payload = {
+                review_star: this.review_star,
+                name: this.name,
+                review_comment: this.comment,
+            }
+            axios.post('https://review-backend.herokuapp.com/api/v1/review',payload)
+            .then(res =>{
+                console.log(res);
+                console.log('kalau berhasil');
+            })
+            .catch(err =>{
+                console.log(err);
+                console.log('kalau gagal');
+            })
+        },
+    }
 }
 </script>
 
@@ -44,7 +66,7 @@ export default {
         padding: 0px 20%;
     }
     .review p {
-        font-size: 48px;
+        font-size: 48px;  
         font-weight: 700;
         font-style: normal;
         color: #000000;
@@ -56,6 +78,7 @@ export default {
         align-items: center;
         justify-content: space-between;
         padding: 0px 0px;
+        cursor: pointer;
     }
     /* .star span i{
         background-color: #E9E22F;
@@ -66,12 +89,11 @@ export default {
     }
     .name {
         line-height: 30px;
-        background-color: #C4C4C4;
         color: black;
         font-size: 15px;
+        outline: none;
     }
     .comment {
-        background-color: #C4C4C4;
         margin-top: -10px;
         font-size: 15px;
     }
@@ -87,12 +109,18 @@ export default {
         width: 100%;
         margin: 30px auto;
     }
-    .button .upload {
+    .device {
         background-color: #C4C4C4;
         padding: 5px 20px;
         border: 1px solid #C4C4C4 ;
-        color: black;
         font-weight: 400;
+        cursor: pointer;
+    }
+    .device:hover {
+        background-color: whitesmoke
+    }
+    .device input {
+        display: none;
     }
     .button .send {
         float: right;
@@ -100,6 +128,10 @@ export default {
         padding: 5px 60px;
         border: 1px solid #C4C4C4 ;
         font-weight: 400;
+        outline: none;
+    }
+    .send:hover {
+        background-color: whitesmoke;
     }
 /* mobile */
     @media(max-width: 678px) {

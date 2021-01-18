@@ -1,8 +1,8 @@
 <template>
-    <div>
+<div>
       <Header/>
       <Card/>
-    </div>
+</div>
 </template>
 
 <script>
@@ -13,10 +13,10 @@ export default {
     Header: Header,
     Card: Card,
   }
-
 }
 </script>
 
 <style>
+  
 
 </style>
