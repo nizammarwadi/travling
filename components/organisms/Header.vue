@@ -21,13 +21,12 @@
         <div class="button">
             <label class="device">
                 <span>Upload Gambar</span>
-                <input type="file" class="upload">
+                <input @change="addFile" type="file" id="upload" class="upload">
             </label>
             <button type="submit" class="send" @click.prevent="submitData">Kirim</button>
         </div>
     </div>
 </template>
-
 <script>
 import axios from 'axios'
 export default {
@@ -35,17 +34,32 @@ export default {
         return {
             starNumber: 5,
             chooseRating: 0,
-            star: '',
             name: '',
             comment: '',
+            add: [],
         }
     },
     methods: {
+        addFile(event) {
+            let add = (event.target.files);
+        },
+        // addFile() {
+        //     if (this.files && this.files[0]) {
+
+        //         let add = new FileReader()
+
+        //         add.addEventListener('load', function() {
+        //             add.readAsDataURL(this.files[0])
+        //         })
+        //     }
+        //     document.getElementById('upload').addEventListener('change', addFile)
+        // },
         submitData() {
             let payload = {
-                review_star: this.review_star,
+                review_star: this.chooseRating,
                 name: this.name,
                 review_comment: this.comment,
+                image: this.add,
             }
             axios.post('https://review-backend.herokuapp.com/api/v1/review',payload)
             .then(res =>{
@@ -56,6 +70,13 @@ export default {
                 console.log(err);
                 console.log('kalau gagal');
             })
+            console.log(payload);
+
+            if (this.chooseRating && this.name && this.comment != '') {
+                this.chooseRating = ''
+                this.name = ''
+                this.comment = ''
+            }
         },
     }
 }
@@ -80,9 +101,6 @@ export default {
         padding: 0px 0px;
         cursor: pointer;
     }
-    /* .star span i{
-        background-color: #E9E22F;
-    } */
     form {
         padding: 0px 0px;
         margin-top: -30px;
@@ -141,7 +159,6 @@ export default {
         .review {
             width: 100%;
             padding: 0px 0px;
-
         }
         form {
             width: 100%;
