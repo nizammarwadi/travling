@@ -1,6 +1,6 @@
 <template>
     <div class="header">
-        <div class="review">
+        <div id="review" class="review">
             <p>Review</p>
             <div style="display:flex">
                 <div v-for="(star,id) in starNumber" :key="id" class="star" id="star">
@@ -36,13 +36,12 @@ export default {
             chooseRating: 0,
             name: '',
             comment: '',
-            add: [],
+            // add: [],
         }
     },
     methods: {
-        addFile(event) {
-            let add = (event.target.files);
-        },
+        // 
+        
         // addFile() {
         //     if (this.files && this.files[0]) {
 
@@ -59,17 +58,17 @@ export default {
                 review_star: this.chooseRating,
                 name: this.name,
                 review_comment: this.comment,
-                image: this.add,
+                // image: this.add,
             }
-            axios.post('https://review-backend.herokuapp.com/api/v1/review',payload)
-            .then(res =>{
-                console.log(res);
-                console.log('kalau berhasil');
-            })
-            .catch(err =>{
-                console.log(err);
-                console.log('kalau gagal');
-            })
+            // axios.post('https://review-backend.herokuapp.com/api/v1/review',payload)
+            // .then(res =>{
+            //     console.log(res);
+            //     console.log('kalau berhasil');
+            // })
+            // .catch(err =>{
+            //     console.log(err);
+            //     console.log('kalau gagal');
+            // })
             console.log(payload);
 
             if (this.chooseRating && this.name && this.comment != '') {

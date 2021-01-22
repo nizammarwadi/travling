@@ -1,16 +1,16 @@
 <template>
-<div>
-      <Header/>
+  <div>
+      <Review/>
       <Card/>
-</div>
+  </div>
 </template>
 
 <script>
-import Header from "~/components/organisms/Header.vue"
-import Card from "~/components/mollecules/Card.vue"
+import Review from "~/components/organisms/Review.vue"
+import Card from "~/components/organisms/Card.vue"
 export default {
   components: {
-    Header: Header,
+    Review: Review,
     Card: Card,
   }
 }
